@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Студия Металогия внедряет ИИ в малый и средний бизнес: ассистенты, автоматизация документов, прогнозы, обучение команды.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>:root{color-scheme:light;box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Металогия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: «альманах» на 1200px — лавандовая бумага, плоские пастельные карточки, тяжёлые заголовки 900, цвет выдаётся порциями: фиолетовый только для действий и меток */
+:root{
+  --paper:#f6f1ff; --lav:#ece0ff; --card:#ffffff; --ink:#121212; --ink2:#616161; --ink3:#8c8c8c; --line:#d9d2e6;
+  --violet:#6c24e0; --violet-deep:#41128c; --on-violet:#ffffff; --magenta:#f60e9d; --sapphire:#3d4ceb; --mint:#0f9972;
+  --t-lav:#ece0ff; --t-mint:#d9f5e9; --t-peach:#ffe6d6; --t-pink:#ffe0f0; --t-sky:#dde6ff;
+  --glow1:rgba(147,87,244,.26); --glow2:rgba(67,113,239,.14);
+  --danger:#c0262d; --ok:#0f9972;
+  --f-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#12101a; --lav:#1c1730; --card:#1a1724; --ink:#f2eefb; --ink2:#b3abc6; --ink3:#857d99; --line:#2f2944;
+  --violet:#b48cff; --violet-deep:#d6c2ff; --on-violet:#160f26; --magenta:#ff6cc4; --sapphire:#8c96ff; --mint:#4fd3a8;
+  --t-lav:#241c3d; --t-mint:#14302a; --t-peach:#33241b; --t-pink:#341a2c; --t-sky:#1a2140;
+  --glow1:rgba(147,87,244,.30); --glow2:rgba(67,113,239,.18);
+  --danger:#ff8a8f; --ok:#4fd3a8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#12101a; --lav:#1c1730; --card:#1a1724; --ink:#f2eefb; --ink2:#b3abc6; --ink3:#857d99; --line:#2f2944;
+  --violet:#b48cff; --violet-deep:#d6c2ff; --on-violet:#160f26; --magenta:#ff6cc4; --sapphire:#8c96ff; --mint:#4fd3a8;
+  --t-lav:#241c3d; --t-mint:#14302a; --t-peach:#33241b; --t-pink:#341a2c; --t-sky:#1a2140;
+  --glow1:rgba(147,87,244,.30); --glow2:rgba(67,113,239,.18);
+  --danger:#ff8a8f; --ok:#4fd3a8; color-scheme:dark}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--f-sans)}
+.in{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.02em}
+h1{font-size:clamp(40px,7.2vw,76px);font-weight:900;line-height:1.02}
+h2{font-size:clamp(30px,4.6vw,48px);font-weight:900;line-height:1.06}
+h3{font-size:20px;font-weight:700;line-height:1.25;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px}
+.eyebrow{align-self:flex-start;display:inline-block;font:700 13px/1 var(--f-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--violet);background:var(--lav);padding:7px 11px;border-radius:999px}
+.sub{color:var(--ink2);font-size:18px;max-width:58ch}
+.btn{display:inline-flex;align-items:center;gap:8px;font:700 16px/1 var(--f-sans);padding:14px 24px;border-radius:4px;text-decoration:none;border:1px solid transparent;cursor:pointer}
+.btn.primary{background:var(--violet);color:var(--on-violet)}
+.btn.primary:hover{background:var(--violet-deep)}
+.btn.ghost{border-color:var(--line);color:var(--ink);background:var(--card)}
+.btn.ghost::after{content:"›";font-weight:400;font-size:20px;line-height:0}
+.btn:disabled{opacity:.55;cursor:progress}
+.arrow{color:var(--violet);text-decoration:none;font-weight:500}
+.arrow::after{content:" ›"}
+.arrow:hover{text-decoration:underline}
+
+/* nav */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+nav .in{display:flex;align-items:center;gap:24px;min-height:64px}
+.logo{display:block;height:26px;flex:none}
+.logo svg{height:100%;width:auto;display:block}
+nav ul{list-style:none;margin:0 0 0 auto;padding:0;display:flex;gap:26px;font-weight:700;font-size:15px}
+nav ul a{text-decoration:none}
+nav ul a:hover{color:var(--violet)}
+nav ul a.soc{color:var(--magenta)}
+@media (max-width:820px){nav ul{display:none}}
+
+/* hero */
+.hero{background:radial-gradient(127% 82% at 50% -30%, transparent 0%, var(--glow1) 33%, var(--glow2) 66%, transparent 100%)}
+.hero .in{padding-block:84px 76px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:24px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.garden{width:100%;max-width:520px;justify-self:end;aspect-ratio:1/1;border-radius:32px;background:var(--card);overflow:hidden}
+.garden svg{width:100%;height:100%;display:block}
+@media (max-width:860px){.hero .in{grid-template-columns:1fr;padding-block:56px}.garden{justify-self:start;max-width:420px}}
+
+section{padding-block:88px;scroll-margin-top:64px}
+.head{display:flex;flex-direction:column;gap:16px;margin-bottom:40px;max-width:760px}
+
+/* services — pastel cards */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.tile{border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tile .ico{width:44px;height:44px}
+.tile p{color:var(--ink2);font-size:16px}
+.t-lav{background:var(--t-lav)}.t-mint{background:var(--t-mint)}.t-peach{background:var(--t-peach)}.t-pink{background:var(--t-pink)}.t-sky{background:var(--t-sky)}
+
+/* process */
+.process{background:var(--lav)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;counter-reset:s}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:10px;counter-increment:s}
+.steps li::before{content:counter(s);font:900 44px/1 var(--f-sans);color:var(--violet);letter-spacing:-.03em}
+.steps p{color:var(--ink2);font-size:16px}
+
+/* social — the loud block */
+.social{padding-block:32px}
+.social-box{position:relative;border-radius:32px;overflow:hidden;background:linear-gradient(135deg,var(--t-mint) 0%,var(--t-sky) 48%,var(--t-pink) 100%);padding:clamp(28px,5vw,64px)}
+.social-box::before{content:"";position:absolute;inset:auto -10% -40% auto;width:60%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--glow1),transparent 65%);pointer-events:none}
+.social-top{position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:40px}
+.social-top .eyebrow{color:var(--magenta);background:var(--card)}
+.social-top h2{font-size:clamp(36px,6vw,64px)}
+.social-top .copy{display:flex;flex-direction:column;gap:18px}
+.pledge{background:var(--card);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.pledge ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15.5px}
+.pledge li{display:flex;gap:10px}
+.pledge li::before{content:"∴";color:var(--magenta);font-weight:700}
+@media (max-width:860px){.social-top{grid-template-columns:1fr}}
+.social .grid,.social .empty{position:relative}
+.social .case{border-color:transparent}
+.social .case .cover{background:var(--t-pink)}
+.social .case .cover .ind{color:var(--magenta)}
+.social .case .res::before{color:var(--magenta)}
+.social .empty{background:color-mix(in srgb,var(--card) 70%,transparent);border-color:color-mix(in srgb,var(--magenta) 35%,transparent)}
+.social .empty .dots{color:var(--magenta)}
+
+/* cases */
+.cases-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:32px}
+.cases-head .head{margin-bottom:0}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:700 14px/1 var(--f-sans);padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--violet);color:var(--on-violet);border-color:var(--violet)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.case{background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.case .cover{background:var(--t-lav);padding:24px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;min-height:118px}
+.case .cover .ind{font:700 12.5px var(--f-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.pdf{font:500 11.5px/1 var(--f-mono);padding:6px 8px;border-radius:4px;background:var(--card);color:var(--ink)}
+.case .body{padding:22px 24px 8px;display:flex;flex-direction:column;gap:10px;flex:1}
+.case .res{display:flex;gap:10px;align-items:baseline;font-weight:500;color:var(--ink2);font-size:15.5px}
+.case .res::before{content:"∴";color:var(--violet);font-weight:700}
+.case .meta{font:400 13px var(--f-mono);color:var(--ink3);margin-top:auto;display:flex;flex-wrap:wrap;gap:4px 14px;padding-top:6px}
+.case .actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 24px 22px}
+.del{margin-left:auto;font:500 13.5px var(--f-sans);background:none;border:0;color:var(--ink3);cursor:pointer;padding:0}
+.del.armed{color:var(--danger);font-weight:700}
+.empty{border:1.5px dashed var(--line);border-radius:16px;padding:48px 24px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.empty .dots{font-size:32px;color:var(--violet);line-height:1}
+.empty p{color:var(--ink2);max-width:52ch}
+
+/* admin */
+.admin{margin-top:32px;background:var(--card);border:1px solid var(--violet);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:18px}
+.admin-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline}
+.admin-top span{font-size:14px;color:var(--ink2)}
+.admin form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.admin label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;min-width:0}
+.admin .wide{grid-column:1/-1}
+.admin input,.admin select{font:400 16px var(--f-sans);padding:11px 12px;border-radius:4px;border:1px solid var(--line);background:var(--paper);color:var(--ink);min-width:0}
+.kind{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;border:0;padding:0;margin:0}
+.kind legend{font-size:14px;font-weight:700;margin-bottom:8px;padding:0}
+.kind label{flex-direction:row;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);border-radius:999px;padding:9px 14px;cursor:pointer;background:var(--paper)}
+.kind label:has(input:checked){border-color:var(--violet);background:var(--lav);color:var(--violet);font-weight:700}
+.kind input{accent-color:var(--violet);margin:0}
+.drop{grid-column:1/-1;border:1.5px dashed var(--line);border-radius:12px;padding:18px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--paper)}
+.drop.over{border-color:var(--violet);background:var(--lav)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.drop .btn{font-size:14px;padding:11px 16px}
+.drop .fname{font:400 13.5px var(--f-mono);color:var(--ink2);min-width:0;overflow-wrap:anywhere}
+.form-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.status{font-size:14.5px}
+.status.err{color:var(--danger)}
+.status.ok{color:var(--ok)}
+@media (max-width:640px){.admin form{grid-template-columns:1fr}}
+
+/* contacts */
+.contact .box{background:var(--card);border:1px solid var(--line);border-radius:32px;padding:clamp(28px,5vw,56px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:40px;align-items:start}
+.contact .head{margin-bottom:0}
+.contact dl{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:14px 22px;font-size:18px}
+.contact dt{color:var(--ink3);font:500 13px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;padding-top:5px}
+.contact dd{margin:0;font-weight:700;user-select:all;overflow-wrap:anywhere}
+@media (max-width:760px){.contact .box{grid-template-columns:1fr}}
+footer .in{padding-block:32px 40px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:14px;color:var(--ink2)}
+</style>
+
+</head>
+<body>
+<nav aria-label="Основная навигация"><div class="in">
+  <a class="logo" href="#top" aria-label="Металогия"><svg role="img" aria-label="Металогия" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 357.36 46.50"><circle cx="25.28" cy="10.11" r="10.11" style="fill:var(--violet)"/><circle cx="10.11" cy="36.39" r="10.11" style="fill:var(--ink)"/><circle cx="40.45" cy="36.39" r="10.11" style="fill:var(--ink)"/><path d="M117.721767701199 8.25V38.25H110.521767701199V10.89L112.281767701199 11.009999999999998L100.081767701199 38.25H92.361767701199L80.161767701199 11.09L81.921767701199 10.93V38.25H74.721767701199V8.25H86.361767701199L97.761767701199 34.49H94.721767701199L106.081767701199 8.25ZM136.121767701199 38.89Q132.041767701199 38.89 128.821767701199 37.370000000000005Q125.601767701199 35.85 123.761767701199 33.13Q121.921767701199 30.41 121.921767701199 26.77Q121.921767701199 23.21 123.68176770119899 20.53Q125.441767701199 17.849999999999998 128.541767701199 16.33Q131.641767701199 14.809999999999999 135.561767701199 14.809999999999999Q139.56176770119902 14.809999999999999 142.441767701199 16.57Q145.321767701199 18.33 146.881767701199 21.53Q148.441767701199 24.73 148.441767701199 29.049999999999997H127.881767701199V24.369999999999997H144.361767701199L141.681767701199 26.049999999999997Q141.56176770119902 24.17 140.78176770119902 22.87Q140.00176770119901 21.57 138.721767701199 20.869999999999997Q137.441767701199 20.169999999999998 135.681767701199 20.169999999999998Q133.761767701199 20.169999999999998 132.361767701199 20.93Q130.961767701199 21.69 130.181767701199 23.05Q129.401767701199 24.41 129.401767701199 26.21Q129.401767701199 28.490000000000002 130.421767701199 30.09Q131.441767701199 31.689999999999998 133.381767701199 32.53Q135.321767701199 33.37 138.121767701199 33.37Q140.681767701199 33.37 143.241767701199 32.67Q145.801767701199 31.97 147.841767701199 30.689999999999998V35.53Q145.521767701199 37.13 142.541767701199 38.010000000000005Q139.56176770119902 38.89 136.121767701199 38.89ZM159.161767701199 18.009999999999998H166.601767701199V38.25H159.161767701199ZM150.321767701199 15.45H175.481767701199V21.09H150.321767701199ZM199.161767701199 38.25 198.161767701199 29.97 199.241767701199 26.85 198.161767701199 23.77 199.161767701199 15.45H206.881767701199L205.481767701199 26.85L206.881767701199 38.25ZM201.00176770119901 26.85Q200.401767701199 30.490000000000002 198.72176770119898 33.19Q197.041767701199 35.89 194.481767701199 37.39Q191.921767701199 38.89 188.721767701199 38.89Q185.361767701199 38.89 182.821767701199 37.370000000000005Q180.28176770119902 35.85 178.84176770119902 33.15Q177.40176770119902 30.45 177.40176770119902 26.85Q177.40176770119902 23.25 178.84176770119902 20.549999999999997Q180.28176770119902 17.849999999999998 182.821767701199 16.33Q185.361767701199 14.809999999999999 188.721767701199 14.809999999999999Q191.921767701199 14.809999999999999 194.481767701199 16.31Q197.041767701199 17.81 198.74176770119902 20.490000000000002Q200.441767701199 23.17 201.00176770119901 26.85ZM184.921767701199 26.85Q184.921767701199 28.689999999999998 185.68176770119902 30.11Q186.441767701199 31.53 187.78176770119902 32.35Q189.12176770119902 33.17 190.881767701199 33.17Q192.641767701199 33.17 194.22176770119898 32.35Q195.801767701199 31.53 197.00176770119901 30.11Q198.201767701199 28.689999999999998 198.801767701199 26.85Q198.201767701199 25.009999999999998 197.00176770119901 23.589999999999996Q195.801767701199 22.169999999999998 194.22176770119898 21.35Q192.641767701199 20.53 190.881767701199 20.53Q189.12176770119902 20.53 187.78176770119902 21.35Q186.441767701199 22.169999999999998 185.68176770119902 23.589999999999996Q184.921767701199 25.009999999999998 184.921767701199 26.85ZM214.961767701199 15.45H239.121767701199V38.25H231.72176770119898V17.61L235.121767701199 21.009999999999998H218.681767701199L221.841767701199 18.169999999999998Q222.081767701199 20.61 222.201767701199 22.59Q222.321767701199 24.57 222.321767701199 26.17Q222.321767701199 32.769999999999996 220.321767701199 35.75Q218.321767701199 38.73 213.841767701199 38.73Q212.60176770119898 38.73 211.44176770119898 38.47Q210.281767701199 38.21 209.201767701199 37.57V32.25Q209.921767701199 32.53 210.621767701199 32.67Q211.32176770119898 32.81 211.88176770119898 32.81Q213.88176770119898 32.81 214.74176770119897 31.03Q215.60176770119898 29.25 215.60176770119898 25.13Q215.60176770119898 23.21 215.44176770119898 20.79Q215.281767701199 18.37 214.961767701199 15.45ZM257.201767701199 38.89Q252.881767701199 38.89 249.641767701199 37.370000000000005Q246.401767701199 35.85 244.60176770119898 33.13Q242.801767701199 30.41 242.801767701199 26.85Q242.801767701199 23.25 244.60176770119898 20.549999999999997Q246.401767701199 17.849999999999998 249.66176770119898 16.33Q252.921767701199 14.809999999999999 257.201767701199 14.809999999999999Q261.521767701199 14.809999999999999 264.781767701199 16.33Q268.041767701199 17.849999999999998 269.841767701199 20.549999999999997Q271.641767701199 23.25 271.641767701199 26.85Q271.641767701199 30.45 269.841767701199 33.15Q268.041767701199 35.85 264.781767701199 37.370000000000005Q261.521767701199 38.89 257.201767701199 38.89ZM257.201767701199 33.29Q259.401767701199 33.29 260.94176770119896 32.51Q262.481767701199 31.73 263.30176770119897 30.29Q264.121767701199 28.85 264.121767701199 26.85Q264.121767701199 24.85 263.30176770119897 23.41Q262.481767701199 21.97 260.94176770119896 21.189999999999998Q259.401767701199 20.41 257.201767701199 20.41Q255.081767701199 20.41 253.521767701199 21.189999999999998Q251.961767701199 21.97 251.121767701199 23.41Q250.281767701199 24.85 250.281767701199 26.85Q250.281767701199 28.85 251.121767701199 30.29Q251.961767701199 31.73 253.521767701199 32.51Q255.081767701199 33.29 257.201767701199 33.29ZM294.68176770119896 15.45V21.09H279.32176770119895L282.721767701199 17.69V38.25H275.32176770119895V15.45ZM297.641767701199 38.25V15.45H304.92176770119903V34.25L303.241767701199 33.769999999999996L316.081767701199 15.45H325.641767701199V38.25H318.321767701199V19.009999999999998L320.04176770119903 19.53L306.92176770119903 38.25ZM349.641767701199 25.89V30.61H338.60176770119904L338.521767701199 30.37Q335.881767701199 30.37 333.861767701199 29.47Q331.841767701199 28.57 330.72176770119904 26.89Q329.60176770119904 25.21 329.60176770119904 23.009999999999998Q329.60176770119904 20.73 330.72176770119904 19.05Q331.841767701199 17.37 333.861767701199 16.41Q335.881767701199 15.45 338.521767701199 15.45H355.001767701199V38.25H347.561767701199V17.33L349.681767701199 20.37H340.361767701199Q338.841767701199 20.37 337.98176770119903 21.09Q337.121767701199 21.81 337.121767701199 23.09Q337.121767701199 24.369999999999997 337.98176770119903 25.13Q338.841767701199 25.89 340.361767701199 25.89ZM345.081767701199 27.57 337.401767701199 38.25H329.001767701199L337.001767701199 27.57Z" style="fill:var(--ink)"/></svg></a>
+  <ul><li><a href="#services">Услуги</a></li><li><a href="#process">Как работаем</a></li><li><a href="#cases">Кейсы</a></li><li><a class="soc" href="#social">Социальные проекты</a></li><li><a href="#contact">Контакты</a></li></ul>
+</div></nav>
+
+<header class="hero" id="top"><div class="in">
+  <div class="hero-copy">
+    <span class="eyebrow">Студия внедрения ИИ</span>
+    <h1>Внедряем ИИ по науке</h1>
+    <p class="sub">Находим в бизнесе процессы, где нейросети дают измеримый результат, проверяем гипотезу на пилоте и встраиваем решение в работу команды.</p>
+    <div class="cta"><a class="btn primary" href="#contact">Обсудить проект</a><a class="btn ghost" href="#cases">Смотреть кейсы</a></div>
+  </div>
+  <div class="garden" aria-hidden="true">
+    <svg viewBox="0 0 400 400" fill="none">
+      <g stroke="var(--line)" stroke-width="1">
+        <circle cx="200" cy="214" r="168"/><circle cx="200" cy="214" r="124"/><circle cx="200" cy="214" r="80"/>
+      </g>
+      <g stroke="var(--sapphire)" stroke-width="1.5" opacity=".55">
+        <path d="M200 120 L118 262 L282 262 Z"/>
+        <path d="M200 120 C150 60 70 90 54 160"/><path d="M200 120 C250 60 330 90 346 160"/>
+        <path d="M118 262 C80 300 70 340 96 366"/><path d="M282 262 C320 300 330 340 304 366"/>
+        <path d="M118 262 C170 320 230 320 282 262"/>
+      </g>
+      <g style="fill:var(--card)" stroke="var(--violet)" stroke-width="1.5">
+        <circle cx="54" cy="160" r="7"/><circle cx="346" cy="160" r="7"/><circle cx="96" cy="366" r="7"/><circle cx="304" cy="366" r="7"/><circle cx="200" cy="304" r="5"/>
+      </g>
+      <circle cx="54" cy="160" r="3" style="fill:var(--mint)"/><circle cx="346" cy="160" r="3" style="fill:var(--magenta)"/>
+      <circle cx="200" cy="120" r="34" style="fill:var(--violet)"/>
+      <circle cx="118" cy="262" r="34" style="fill:var(--ink)"/>
+      <circle cx="282" cy="262" r="34" style="fill:var(--ink)"/>
+      <g font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="1" text-anchor="middle">
+        <text x="200" y="70" style="fill:var(--violet)">РЕЗУЛЬТАТ</text>
+        <text x="118" y="318" style="fill:var(--ink2)">ДАННЫЕ</text>
+        <text x="282" y="318" style="fill:var(--ink2)">ПРОЦЕССЫ</text>
+      </g>
+    </svg>
+  </div>
+</div></header>
+
+<section id="services"><div class="in">
+  <div class="head"><span class="eyebrow">Услуги</span><h2>Что мы внедряем</h2><p class="sub">Решения под задачи малого и среднего бизнеса. Работают на российских и открытых моделях, данные остаются у вас.</p></div>
+  <div class="tiles">
+    <article class="tile t-lav"><svg class="ico" viewBox="0 0 44 44" fill="none" stroke="var(--violet)" stroke-width="2"><rect x="6" y="9" width="32" height="22" rx="6"/><path d="M14 31 L12 38 L21 31"/><circle cx="16" cy="20" r="1.5" fill="var(--violet)"/><circle cx="22" cy="20" r="1.5" fill="var(--violet)"/><circle cx="28" cy="20" r="1.5" fill="var(--violet)"/></svg><h3>ИИ-ассистенты</h3><p>Отвечают клиентам в Telegram, на сайте и в CRM, квалифицируют заявки и передают менеджеру готовый контекст.</p></article>
+    <article class="tile t-mint"><svg class="ico" viewBox="0 0 44 44" fill="none" stroke="var(--mint)" stroke-width="2"><path d="M11 5 H27 L35 13 V39 H11 Z"/><path d="M27 5 V13 H35"/><path d="M16 22 H30 M16 28 H30 M16 34 H24"/></svg><h3>Автоматизация документов</h3><p>Разбор договоров, счетов и заявок, перенос данных в 1С и таблицы, проверка по чек-листу.</p></article>
+    <article class="tile t-peach"><svg class="ico" viewBox="0 0 44 44" fill="none" stroke="#d2691e" stroke-width="2"><path d="M6 38 H38"/><path d="M9 30 L17 21 L24 26 L36 11"/><path d="M29 11 H36 V18"/></svg><h3>Прогнозы и отчёты</h3><p>Прогноз спроса и остатков, сводки по продажам на обычном языке, поиск аномалий.</p></article>
+    <article class="tile t-pink"><svg class="ico" viewBox="0 0 44 44" fill="none" stroke="var(--magenta)" stroke-width="2"><circle cx="15" cy="15" r="5"/><circle cx="29" cy="15" r="5"/><path d="M6 36 C6 28 10 24 15 24 C20 24 24 28 24 36"/><path d="M22 28 C24 25.5 26 24 29 24 C34 24 38 28 38 36"/></svg><h3>Обучение сотрудников</h3><p>Практические воркшопы по нейросетям на задачах вашей компании, а не на абстрактных примерах.</p></article>
+  </div>
+</div></section>
+
+<section class="process" id="process"><div class="in">
+  <div class="head"><span class="eyebrow">Как работаем</span><h2>Сначала логика, потом нейросети</h2><p class="sub">Каждый этап заканчивается понятным результатом, после которого можно остановиться.</p></div>
+  <ol class="steps">
+    <li><h3>Аудит процессов</h3><p>Разбираем, где теряются время и деньги, и выбираем задачи с самым быстрым эффектом.</p></li>
+    <li><h3>Пилот</h3><p>Собираем рабочий прототип на ваших данных и считаем результат в цифрах.</p></li>
+    <li><h3>Внедрение</h3><p>Встраиваем решение в CRM, 1С и мессенджеры, обучаем команду.</p></li>
+    <li><h3>Сопровождение</h3><p>Следим за качеством, дообучаем и масштабируем на соседние процессы.</p></li>
+  </ol>
+</div></section>
+
+<section id="cases"><div class="in">
+  <div class="cases-head">
+    <div class="head"><span class="eyebrow">Кейсы</span><h2>Реализованные проекты</h2><p class="sub">Презентации проектов в PDF: задача, решение и результат.</p></div>
+    <div class="filters" id="filters" role="group" aria-label="Фильтр по отрасли"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden><span class="dots">∴</span><h3>Кейсы скоро появятся</h3><p id="empty-text">Мы готовим презентации завершённых проектов.</p></div>
+</div></section>
+
+<section class="social" id="social"><div class="in">
+  <div class="social-box">
+    <div class="social-top">
+      <div class="copy">
+        <span class="eyebrow">Социальные проекты</span>
+        <h2>ИИ для тех, кто помогает другим</h2>
+        <p class="sub">Часть времени студии мы отдаём некоммерческим организациям, школам и социальным инициативам. Делаем для них то же, что для бизнеса, бесплатно или по себестоимости.</p>
+        <div class="cta"><a class="btn primary" href="#contact">Предложить проект</a></div>
+      </div>
+      <div class="pledge">
+        <h3>Кому помогаем</h3>
+        <ul>
+          <li>Благотворительным фондам и НКО: обработка обращений, отчёты для доноров</li>
+          <li>Школам и вузам: ассистенты для учителей и студентов</li>
+          <li>Городским и экологическим инициативам: аналитика и автоматизация</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid" id="grid-social"></div>
+    <div class="empty" id="empty-social" hidden><span class="dots">∴</span><h3>Первые социальные проекты уже в работе</h3><p id="empty-social-text">Здесь появятся презентации проектов, которые мы сделали для фондов, школ и инициатив.</p></div>
+  </div>
+</div></section>
+
+<section class="contact" id="contact"><div class="in">
+  <div class="box">
+    <div class="head"><span class="eyebrow">Контакты</span><h2>Расскажите о задаче</h2><p class="sub">Первая консультация бесплатна: за 40 минут разберём процесс и скажем, есть ли смысл подключать ИИ.</p></div>
+    <dl>
+      <dt>Telegram</dt><dd>@metalogia</dd>
+      <dt>Почта</dt><dd>hello@metalogia.ai</dd>
+      <dt>Сайт</dt><dd>metalogia.ai</dd>
+    </dl>
+  </div>
+</div></section>
+
+<footer><div class="in"><span>© 2026 Студия Металогия</span><span>Внедряем ИИ по науке</span></div></footer>
+
+<script type="application/json" id="cases-data">{"cases": [{"id": "vsat-trainer", "kind": "business", "title": "Тренажёр VSAT для монтажников спутниковой связи", "industry": "Телеком", "year": "2026", "result": "Полный наряд монтажника в браузере: 6 практик на симуляторе антенны, модема и ЦУС и ИИ-инструктор", "size": 3196397, "added": "2026-10-22", "file": "/cases/vsat-trainer.pdf"}, {"id": "analyzer-academy", "kind": "business", "title": "Анализатор Academy: тренажёр анализатора спектра R&S FSL18", "industry": "Радиоизмерения", "year": "2026", "result": "Прибор в браузере: 63 урока, 15 заданий с автопроверкой и ИИ-наставник вместо очереди к дорогому анализатору", "size": 3555394, "added": "2026-10-22", "file": "/cases/analyzer-academy.pdf"}, {"id": "mtcna-academy", "kind": "business", "title": "MTCNA Academy: подготовка сетевых инженеров MikroTik", "industry": "Сети и IT", "year": "2026", "result": "Работающая платформа: 46 уроков, 13 лаб в симуляторе RouterOS с автопроверкой и ИИ-тьютор на двух языках", "size": 2885646, "added": "2026-10-22", "file": "/cases/mtcna-academy.pdf"}, {"id": "lessoncreator", "kind": "business", "title": "LessonCreator: урок иностранного языка за минуту", "industry": "Языковое обучение", "year": "2026", "result": "Готовый урок из 13 блоков за 47 секунд при себестоимости ИИ около $0,10", "size": 5282814, "added": "2026-10-22", "file": "/cases/lessoncreator.pdf"}]}</script>
+<script>
+const $ = id => document.getElementById(id);
+let state = {cases: []};
+try { state = JSON.parse($('cases-data').textContent) || state; } catch (e) {}
+let filter = 'Все';
+function fmtSize(b){ if(!b) return ''; return b > 1048576 ? (b/1048576).toFixed(1).replace('.', ',') + ' МБ' : Math.max(1, Math.round(b/1024)) + ' КБ'; }
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+const isSocial = c => c.kind === 'social';
+function card(c){
+  const card = el('article', 'case');
+  const cover = el('div', 'cover');
+  cover.append(el('span', 'ind', c.industry || (isSocial(c) ? 'Социальный проект' : 'Проект')), el('span', 'pdf', 'PDF'));
+  const body = el('div', 'body');
+  body.append(el('h3', null, c.title));
+  if (c.result) body.append(el('p', 'res', c.result));
+  const meta = el('div', 'meta');
+  [c.year, fmtSize(c.size)].filter(Boolean).forEach(t => meta.append(el('span', null, t)));
+  body.append(meta);
+  const act = el('div', 'actions');
+  const a = el('a', 'arrow', 'Открыть презентацию');
+  a.href = c.file; a.target = '_blank'; a.rel = 'noopener';
+  act.append(a);
+  card.append(cover, body, act);
+  return card;
+}
+function render(){
+  const biz = state.cases.filter(c => !isSocial(c));
+  const soc = state.cases.filter(isSocial);
+  const inds = [...new Set(biz.map(c => c.industry).filter(Boolean))];
+  if (!inds.includes(filter)) filter = 'Все';
+  const f = $('filters'); f.textContent = '';
+  if (inds.length > 1) ['Все', ...inds].forEach(name => {
+    const b = el('button', 'chip', name); b.type = 'button';
+    b.setAttribute('aria-pressed', String(filter === name));
+    b.onclick = () => { filter = name; render(); };
+    f.append(b);
+  });
+  const g = $('grid'); g.textContent = '';
+  biz.filter(c => filter === 'Все' || c.industry === filter).forEach(c => g.append(card(c)));
+  g.hidden = biz.length === 0; $('empty').hidden = biz.length > 0;
+  const gs = $('grid-social'); gs.textContent = '';
+  soc.forEach(c => gs.append(card(c)));
+  gs.hidden = soc.length === 0; $('empty-social').hidden = soc.length > 0;
+}
+render();
+</script>
+
+</body>
+</html>
