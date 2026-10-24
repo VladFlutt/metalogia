@@ -6,3 +6,7 @@
 
 1. Положите PDF в папку `cases/`.
 2. Добавьте запись в JSON внутри `<script id="cases-data">` в `index.html`: `title`, `industry`, `year`, `result`, `file` (`/cases/имя.pdf`), `size` в байтах и `kind` (`business` или `social`).
+
+## Превью при наведении
+
+Первая страница каждой презентации лежит в `cases/previews/имя.webp`. Для нового PDF: `pdftoppm -f 1 -l 1 -r 110 -png cases/имя.pdf /tmp/p` и сохраните результат в WebP шириной около 960 px под тем же именем. Если превью нет, карточка просто остаётся без него.
