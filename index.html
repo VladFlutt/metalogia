@@ -184,6 +184,24 @@ footer .in{padding-block:32px 40px;display:flex;flex-wrap:wrap;gap:12px;justify-
 html[lang="en"] .logo-ru{display:none!important}
 html[lang="en"] .logo-en{display:block!important}
 @media (max-width:820px){.lang{margin-left:auto}}
+/* motion — один почерк: power3.out, длительности .6 / .8 / 1.2 / 1.6 */
+:root{--ease-out:cubic-bezier(.215,.61,.355,1);--ease-io:cubic-bezier(.645,.045,.355,1)}
+/* кнопки: круг заливает кнопку, надпись прокручивается */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:color .4s var(--ease-out),border-color .4s var(--ease-out)}
+.btn::before{content:"";position:absolute;right:18px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:var(--violet-deep);transform:scale(0);transition:transform .6s var(--ease-out);z-index:-1;pointer-events:none}
+.btn.primary:hover{background:var(--violet)}
+.btn.ghost::before{background:var(--violet)}
+.btn.ghost:hover,.btn.ghost:focus-visible{color:var(--on-violet);border-color:var(--violet);transition:color .25s var(--ease-out) .3s,border-color .4s var(--ease-out)}
+.btn:hover::before,.btn:focus-visible::before{transform:scale(40);transition-duration:1.2s}
+.btn .lbl{display:inline-block;overflow:hidden;height:1.2em;line-height:1.2em;vertical-align:top}
+.btn .lbl span{display:block;text-shadow:0 1.2em 0 currentColor;transition:transform .6s var(--ease-out)}
+.btn:hover .lbl span,.btn:focus-visible .lbl span{transform:translateY(-1.2em)}
+/* заголовки: слова выезжают из-под маски */
+.wr{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
+.wr>span{display:inline-block;transition:transform 1.6s var(--ease-out)}
+.motion .split:not(.in-view) .wr>span{transform:translateY(105%)}
+@media (prefers-reduced-motion:reduce){.btn,.btn::before,.btn .lbl span,.wr>span{transition:none!important}.btn .lbl span{transform:none!important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 </style>
 
 </head>
@@ -199,7 +217,7 @@ html[lang="en"] .logo-en{display:block!important}
     <span class="eyebrow">Студия внедрения ИИ</span>
     <h1>Внедряем ИИ по науке</h1>
     <p class="sub">Находим в бизнесе процессы, где нейросети дают измеримый результат, проверяем гипотезу на пилоте и встраиваем решение в работу команды.</p>
-    <div class="cta"><a class="btn primary" href="#contact">Обсудить проект</a><a class="btn ghost" href="#cases">Смотреть кейсы</a></div>
+    <div class="cta"><a class="btn primary" href="#contact"><span class="lbl"><span>Обсудить проект</span></span></a><a class="btn ghost" href="#cases"><span class="lbl"><span>Смотреть кейсы</span></span></a></div>
   </div>
   <div class="garden" aria-hidden="true">
     <svg viewBox="0 0 400 400" fill="none">
@@ -264,7 +282,7 @@ html[lang="en"] .logo-en{display:block!important}
         <span class="eyebrow">Социальные проекты</span>
         <h2>ИИ для тех, кто помогает другим</h2>
         <p class="sub">Часть времени студии мы отдаём некоммерческим организациям, школам и социальным инициативам. Делаем для них то же, что для бизнеса, бесплатно или по себестоимости.</p>
-        <div class="cta"><a class="btn primary" href="#contact">Предложить проект</a></div>
+        <div class="cta"><a class="btn primary" href="#contact"><span class="lbl"><span>Предложить проект</span></span></a></div>
       </div>
       <div class="pledge">
         <h3>Кому помогаем</h3>
@@ -388,6 +406,38 @@ document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click
   applyLang(b.dataset.lang);
 }));
 applyLang(lang);
+</script>
+
+<script>
+/* motion: заголовки выезжают по словам. Исходный текст остаётся в .sr (его переводит RU/EN), слова строятся из него.
+   Скрытое состояние ставит только этот скрипт: без JS и при «уменьшить движение» всё видно сразу */
+(function(){
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const heads = document.querySelectorAll('h1, h2');
+  function build(h, src, layer){
+    layer.textContent = '';
+    const words = src.textContent.trim().split(/\s+/);
+    words.forEach((w, i) => {
+      const o = document.createElement('span'); o.className = 'wr';
+      const s = document.createElement('span'); s.textContent = w; s.style.transitionDelay = (i * 0.06).toFixed(2) + 's';
+      o.append(s); layer.append(o); if (i < words.length - 1) layer.append(' ');
+    });
+  }
+  heads.forEach(h => {
+    const src = document.createElement('span'); src.className = 'sr';
+    const layer = document.createElement('span'); layer.setAttribute('aria-hidden', 'true');
+    while (h.firstChild) src.append(h.firstChild);
+    h.append(src, layer);
+    build(h, src, layer);
+    new MutationObserver(() => build(h, src, layer)).observe(src, {characterData: true, childList: true, subtree: true});
+    h.classList.add('split');
+  });
+  document.documentElement.classList.add('motion');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+  }), {rootMargin: '0px 0px -12% 0px'});
+  requestAnimationFrame(() => requestAnimationFrame(() => heads.forEach(h => io.observe(h))));
+})();
 </script>
 
 </body>
