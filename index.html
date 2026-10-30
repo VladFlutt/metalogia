@@ -184,6 +184,49 @@ footer .in{padding-block:32px 40px;display:flex;flex-wrap:wrap;gap:12px;justify-
 html[lang="en"] .logo-ru{display:none!important}
 html[lang="en"] .logo-en{display:block!important}
 @media (max-width:820px){.lang{margin-left:auto}}
+/* motion — один почерк: power3.out, длительности .6 / .8 / 1.2 / 1.6 */
+:root{--ease-out:cubic-bezier(.215,.61,.355,1);--ease-io:cubic-bezier(.645,.045,.355,1)}
+/* кнопки: круг заливает кнопку, надпись прокручивается */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:color .4s var(--ease-out),border-color .4s var(--ease-out)}
+.btn::before{content:"";position:absolute;right:18px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:var(--violet-deep);transform:scale(0);transition:transform .6s var(--ease-out);z-index:-1;pointer-events:none}
+.btn.primary:hover{background:var(--violet)}
+.btn.ghost::before{background:var(--violet)}
+.btn.ghost:hover,.btn.ghost:focus-visible{color:var(--on-violet);border-color:var(--violet);transition:color .25s var(--ease-out) .3s,border-color .4s var(--ease-out)}
+.btn:hover::before,.btn:focus-visible::before{transform:scale(40);transition-duration:1.2s}
+.btn .lbl{display:inline-block;overflow:hidden;height:1.2em;line-height:1.2em;vertical-align:top}
+.btn .lbl span{display:block;text-shadow:0 1.2em 0 currentColor;transition:transform .6s var(--ease-out)}
+.btn:hover .lbl span,.btn:focus-visible .lbl span{transform:translateY(-1.2em)}
+/* заголовки: слова выезжают из-под маски */
+.wr{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
+.wr>span{display:inline-block;transition:transform 1.6s var(--ease-out)}
+.motion .split:not(.in-view) .wr>span{transform:translateY(105%)}
+@media (prefers-reduced-motion:reduce){.btn,.btn::before,.btn .lbl span,.wr>span{transition:none!important}.btn .lbl span{transform:none!important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* шаг 2–3: большое слово, плавный скролл, этапы, фон соцпроектов */
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-stopped{overflow:clip}
+.bigword-wrap{overflow:hidden}
+.bigword{font:900 clamp(44px,14vw,176px)/.8 var(--f-sans);letter-spacing:-.045em;text-transform:uppercase;white-space:nowrap;color:var(--ink);padding-top:.08em;user-select:none}
+.bigword .ch{display:inline-block;will-change:transform}
+.motion .bigword .src{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.hero .bigword-wrap{margin-top:-28px;margin-bottom:-.1em}
+footer .bigword-wrap{display:block;padding-block:0}
+footer .bigword{color:var(--violet);margin-bottom:-.08em}
+body{transition:background-color .6s var(--ease-out)}
+html.bg-social body{background:color-mix(in srgb,var(--violet) 16%,var(--paper))}
+@media (min-width:900px) and (hover:hover){
+  .motion .steps{grid-template-columns:1fr;gap:0}
+  .motion .steps li{background:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:22px 0;display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:24px;row-gap:0;align-items:baseline}
+  .motion .steps li:last-child{border-bottom:1px solid var(--line)}
+  .motion .steps li::before{grid-row:1/3;color:var(--ink3);transition:color .6s var(--ease-out)}
+  .motion .steps h3{font-size:clamp(28px,3.4vw,44px);font-weight:900;letter-spacing:-.02em;line-height:1.1;color:var(--ink3);transition:color .6s var(--ease-out)}
+  .motion .steps p{font-size:18px;max-width:56ch;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--ease-out),opacity .6s var(--ease-out),margin-top .6s var(--ease-out)}
+  .motion .steps li.on::before{color:var(--violet)}
+  .motion .steps li.on h3{color:var(--ink)}
+  .motion .steps li.on p{max-height:8em;opacity:1;margin-top:10px}
+}
+@media (prefers-reduced-motion:reduce){body{transition:none}}
 </style>
 
 </head>
@@ -199,7 +242,7 @@ html[lang="en"] .logo-en{display:block!important}
     <span class="eyebrow">Студия внедрения ИИ</span>
     <h1>Внедряем ИИ по науке</h1>
     <p class="sub">Находим в бизнесе процессы, где нейросети дают измеримый результат, проверяем гипотезу на пилоте и встраиваем решение в работу команды.</p>
-    <div class="cta"><a class="btn primary" href="#contact">Обсудить проект</a><a class="btn ghost" href="#cases">Смотреть кейсы</a></div>
+    <div class="cta"><a class="btn primary" href="#contact"><span class="lbl"><span>Обсудить проект</span></span></a><a class="btn ghost" href="#cases"><span class="lbl"><span>Смотреть кейсы</span></span></a></div>
   </div>
   <div class="garden" aria-hidden="true">
     <svg viewBox="0 0 400 400" fill="none">
@@ -226,7 +269,9 @@ html[lang="en"] .logo-en{display:block!important}
       </g>
     </svg>
   </div>
-</div></header>
+</div>
+<div class="in bigword-wrap"><div class="bigword" id="hero-word"><span class="src">Металогия</span></div></div>
+</header>
 
 <section id="services"><div class="in">
   <div class="head"><span class="eyebrow">Услуги</span><h2>Что мы внедряем</h2><p class="sub">Решения под задачи малого и среднего бизнеса. Работают на российских и открытых моделях, данные остаются у вас.</p></div>
@@ -264,7 +309,7 @@ html[lang="en"] .logo-en{display:block!important}
         <span class="eyebrow">Социальные проекты</span>
         <h2>ИИ для тех, кто помогает другим</h2>
         <p class="sub">Часть времени студии мы отдаём некоммерческим организациям, школам и социальным инициативам. Делаем для них то же, что для бизнеса, бесплатно или по себестоимости.</p>
-        <div class="cta"><a class="btn primary" href="#contact">Предложить проект</a></div>
+        <div class="cta"><a class="btn primary" href="#contact"><span class="lbl"><span>Предложить проект</span></span></a></div>
       </div>
       <div class="pledge">
         <h3>Кому помогаем</h3>
@@ -291,7 +336,9 @@ html[lang="en"] .logo-en{display:block!important}
   </div>
 </div></section>
 
-<footer><div class="in"><span>© 2026 Студия Металогия</span><span>Внедряем ИИ по науке</span></div></footer>
+<footer><div class="in"><span>© 2026 Студия Металогия</span><span>Внедряем ИИ по науке</span></div>
+<div class="in bigword-wrap"><div class="bigword" id="foot-word"><span class="src">Металогия</span></div></div>
+</footer>
 
 <script type="application/json" id="cases-data">{"cases": [{"id": "smart-help", "kind": "social", "title": "Умная помощь: первая помощь, 112 и тихий SOS в кармане", "industry": "Здоровье и безопасность", "year": "2026", "result": "53 пошаговые карточки первой помощи, звонок 112 с координатами и тихий SOS близким, работает без интернета", "size": 2273221, "added": "2026-10-23", "file": "/cases/smart-help.pdf", "title_en": "Smart Help: first aid, 112 and a silent SOS in your pocket", "industry_en": "Health and safety", "result_en": "53 step-by-step first-aid cards, a 112 call with coordinates and a silent SOS to loved ones, works offline"}, {"id": "manager-bip", "kind": "business", "title": "ManagerBIP: все пароли из одной seed-фразы", "industry": "Кибербезопасность", "year": "2026", "result": "Пароли вычисляются из seed-фразы BIP39 по открытому стандарту: без хранилища, сервера и бэкапов", "size": 2085969, "added": "2026-10-23", "file": "/cases/manager-bip.pdf", "title_en": "ManagerBIP: every password from one seed phrase", "industry_en": "Cybersecurity", "result_en": "Passwords are derived from a BIP39 seed phrase using an open standard: no vault, no server, no backups"}, {"id": "vsat-trainer", "kind": "business", "title": "Тренажёр VSAT для монтажников спутниковой связи", "industry": "Телеком", "year": "2026", "result": "Полный наряд монтажника в браузере: 6 практик на симуляторе антенны, модема и ЦУС и ИИ-инструктор", "size": 3196397, "added": "2026-10-22", "file": "/cases/vsat-trainer.pdf", "title_en": "VSAT trainer for satellite installers", "industry_en": "Telecom", "result_en": "A full installer work order in the browser: 6 practicals on an antenna, modem and NOC simulator, plus an AI instructor"}, {"id": "analyzer-academy", "kind": "business", "title": "Анализатор Academy: тренажёр анализатора спектра R&S FSL18", "industry": "Радиоизмерения", "year": "2026", "result": "Прибор в браузере: 63 урока, 15 заданий с автопроверкой и ИИ-наставник вместо очереди к дорогому анализатору", "size": 3555394, "added": "2026-10-22", "file": "/cases/analyzer-academy.pdf", "title_en": "Analyzer Academy: an R&S FSL18 spectrum analyzer trainer", "industry_en": "RF measurement", "result_en": "The instrument in a browser: 63 lessons, 15 auto-graded tasks and an AI mentor instead of queuing for an expensive analyzer"}, {"id": "mtcna-academy", "kind": "business", "title": "MTCNA Academy: подготовка сетевых инженеров MikroTik", "industry": "Сети и IT", "year": "2026", "result": "Работающая платформа: 46 уроков, 13 лаб в симуляторе RouterOS с автопроверкой и ИИ-тьютор на двух языках", "size": 2885646, "added": "2026-10-22", "file": "/cases/mtcna-academy.pdf", "title_en": "MTCNA Academy: training MikroTik network engineers", "industry_en": "Networking and IT", "result_en": "A live platform: 46 lessons, 13 auto-graded labs in a RouterOS simulator and a bilingual AI tutor"}, {"id": "lessoncreator", "kind": "business", "title": "LessonCreator: урок иностранного языка за минуту", "industry": "Языковое обучение", "year": "2026", "result": "Готовый урок из 13 блоков за 47 секунд при себестоимости ИИ около $0,10", "size": 5282814, "added": "2026-10-22", "file": "/cases/lessoncreator.pdf", "title_en": "LessonCreator: a foreign-language lesson in a minute", "industry_en": "Language learning", "result_en": "A ready 13-block lesson in 47 seconds at an AI cost of about $0.10"}]}</script>
 <script>
@@ -388,6 +435,130 @@ document.querySelectorAll('.lang button').forEach(b => b.addEventListener('click
   applyLang(b.dataset.lang);
 }));
 applyLang(lang);
+</script>
+
+<script>
+/* motion: заголовки выезжают по словам. Исходный текст остаётся в .sr (его переводит RU/EN), слова строятся из него.
+   Скрытое состояние ставит только этот скрипт: без JS и при «уменьшить движение» всё видно сразу */
+(function(){
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const heads = document.querySelectorAll('h1, h2');
+  function build(h, src, layer){
+    layer.textContent = '';
+    const words = src.textContent.trim().split(/\s+/);
+    words.forEach((w, i) => {
+      const o = document.createElement('span'); o.className = 'wr';
+      const s = document.createElement('span'); s.textContent = w; s.style.transitionDelay = (i * 0.06).toFixed(2) + 's';
+      o.append(s); layer.append(o); if (i < words.length - 1) layer.append(' ');
+    });
+  }
+  heads.forEach(h => {
+    const src = document.createElement('span'); src.className = 'sr';
+    const layer = document.createElement('span'); layer.setAttribute('aria-hidden', 'true');
+    while (h.firstChild) src.append(h.firstChild);
+    h.append(src, layer);
+    build(h, src, layer);
+    new MutationObserver(() => build(h, src, layer)).observe(src, {characterData: true, childList: true, subtree: true});
+    h.classList.add('split');
+  });
+  document.documentElement.classList.add('motion');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+  }), {rootMargin: '0px 0px -12% 0px'});
+  requestAnimationFrame(() => requestAnimationFrame(() => heads.forEach(h => io.observe(h))));
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+/* motion, шаги 2–3. Почерк: power3.out, scrub 1, тяжёлое только на десктопе */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const desktop = '(min-width: 1024px) and (pointer: fine)';
+
+  // большое слово: буквы строятся из .src, который переводит RU/EN
+  const words = [...document.querySelectorAll('.bigword')].map(box => {
+    const src = box.querySelector('.src');
+    const layer = document.createElement('span'); layer.setAttribute('aria-hidden', 'true'); box.append(layer);
+    const w = {box, src, layer, letters: []};
+    w.build = () => {
+      layer.textContent = '';
+      w.letters = [...src.textContent.trim()].map(ch => { const s = document.createElement('span'); s.className = 'ch'; s.textContent = ch; layer.append(s); return s; });
+      box.style.fontSize = '100px';
+      const avail = box.parentElement.clientWidth - parseFloat(getComputedStyle(box.parentElement).paddingLeft) - parseFloat(getComputedStyle(box.parentElement).paddingRight);
+      box.style.fontSize = (100 * avail / layer.getBoundingClientRect().width).toFixed(1) + 'px';
+    };
+    w.build();
+    return w;
+  });
+  const [hero, foot] = words;
+
+  // этапы: активный пункт по центру экрана или под курсором
+  const steps = [...document.querySelectorAll('.steps li')];
+  const setStep = li => steps.forEach(s => s.classList.toggle('on', s === li));
+  if (steps.length) { setStep(steps[0]); steps.forEach(li => li.addEventListener('mouseenter', () => setStep(li))); }
+
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // плавный скролл
+  if (window.Lenis && matchMedia(desktop).matches) {
+    const lenis = new Lenis({lerp: 0.1, smoothWheel: true, anchors: {offset: -64}});
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // загрузка: буквы hero выезжают снизу
+  if (hero) gsap.fromTo(hero.letters, {yPercent: 110}, {yPercent: 0, stagger: .025, duration: 1.2, ease: 'power3.out', delay: .15});
+
+  let mm, cardTweens = [];
+  function bindCards(){
+    cardTweens.forEach(t => { t.scrollTrigger && t.scrollTrigger.kill(); t.kill(); });
+    cardTweens = [];
+    if (!matchMedia(desktop).matches) return;
+    document.querySelectorAll('.case').forEach(c => {
+      gsap.set(c, {clearProps: 'transform,opacity'});
+      cardTweens.push(gsap.fromTo(c, {scale: .86, opacity: .4}, {scale: 1, opacity: 1, ease: 'none',
+        scrollTrigger: {trigger: c, start: 'top bottom', end: 'top 60%', scrub: 1}}));
+    });
+  }
+  function initScroll(){
+    mm = gsap.matchMedia();
+    mm.add(desktop, () => {
+      const h = document.querySelector('.hero');
+      const big = document.querySelectorAll('.garden circle[r="34"]');
+      const target = [[200, 182], [166, 241], [234, 241]];
+      const tl = gsap.timeline({scrollTrigger: {trigger: h, start: 'top top', end: 'bottom top', scrub: 1}});
+      if (hero) tl.to(hero.letters, {yPercent: 110, opacity: .15, stagger: {from: 'center', amount: .25}, duration: 1}, 0);
+      tl.to('.hero-copy', {y: -80, opacity: .25, duration: 1}, 0)
+        .to('.garden svg > g, .garden svg > circle[r="3"]', {opacity: 0, duration: .6}, 0)
+        .to(big, {attr: {cx: i => target[i][0], cy: i => target[i][1]}, duration: 1}, 0);
+    });
+    mm.add('(min-width: 768px)', () => {
+      if (foot) gsap.fromTo([...foot.letters].reverse(), {xPercent: 120, rotate: -10}, {xPercent: 0, rotate: 0, stagger: .15, ease: 'none',
+        scrollTrigger: {trigger: foot.box.parentElement, start: 'top bottom+=320', end: 'top 88%', scrub: 1}});
+    });
+    bindCards();
+  }
+  initScroll();
+
+  // фон страницы меняется, пока соцпроекты в центре экрана
+  const soc = document.getElementById('social');
+  if (soc) ScrollTrigger.create({trigger: soc, start: 'top center', end: 'bottom center', toggleClass: {targets: document.documentElement, className: 'bg-social'}});
+  steps.forEach(li => ScrollTrigger.create({trigger: li, start: 'top 60%', end: 'bottom 60%', onToggle: st => st.isActive && setStep(li)}));
+
+  // кейсы перерисовываются при фильтре и смене языка
+  if (typeof render === 'function') { const orig = render; render = function(){ orig.apply(this, arguments); bindCards(); ScrollTrigger.refresh(); }; }
+  // смена языка или размера окна: пересобрать буквы и сцены
+  let rt;
+  const rebuild = () => { mm.revert(); words.forEach(w => w.build()); initScroll(); ScrollTrigger.refresh(); };
+  words.forEach(w => new MutationObserver(() => { clearTimeout(rt); rt = setTimeout(rebuild, 30); }).observe(w.src, {characterData: true, childList: true, subtree: true}));
+  let lastW = innerWidth;
+  addEventListener('resize', () => { if (innerWidth === lastW) return; lastW = innerWidth; clearTimeout(rt); rt = setTimeout(rebuild, 200); });
+})();
 </script>
 
 </body>
